@@ -11,7 +11,6 @@ class Role(models.TextChoices):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.USER)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     bio = models.TextField(max_length=500, blank=True)
     is_blocked = models.BooleanField(default=False)
 
@@ -34,7 +33,6 @@ class Message(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(blank=True)
-    image = models.ImageField(upload_to='chat_images/', null=True, blank=True)
     audio = models.FileField(upload_to='chat_audio/', null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
