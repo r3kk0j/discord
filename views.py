@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-# Usunięto kropkę przed models
-from models import Channel, Message, Profile
+import models  # Import bez kropki
 
 def register_view(request):
     if request.method == 'POST':
@@ -29,16 +28,16 @@ def login_view(request):
 
 @login_required
 def index(request):
-    channels = Channel.objects.all()
+    channels = models.Channel.objects.all()
     if not channels.exists():
-        Channel.objects.create(name="ogolny")
+        models.Channel.objects.create(name="ogolny")
     return render(request, 'index.html', {'channels': channels, 'type': 'home'})
 
 @login_required
 def chat_room(request, room_name):
-    channel = Channel.objects.get(name=room_name)
-    chat_messages = Message.objects.filter(channel=channel)
-    channels = Channel.objects.all()
+    channel = models.Channel.objects.get(name=room_name)
+    chat_messages = models.Message.objects.filter(channel=channel)
+    channels = models.Channel.objects.all()
     return render(request, 'chat.html', {
         'room_name': room_name,
         'chat_messages': chat_messages,
