@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - #{{ room_name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #313338;
+            --bg-sidebar: #2B2D31;
+            --bg-chat: #313338;
+            --text-main: #DBDEE1;
+            --discord-accent: #5865F2;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 240px;
+            background-color: var(--bg-sidebar);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            border-right: 1px solid #232428;
+        }
+        .chat-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #232428;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: white;
+        }
+        #chat-log {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .message-box {
+            margin-bottom: 15px;
+        }
+        .author {
+            color: white;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        .timestamp {
+            font-size: 0.75rem;
+            color: #949ba4;
+        }
+        .content {
+            display: block;
+            margin-top: 2px;
+        }
+        .input-area {
+            padding: 20px;
+        }
+        .message-input-container {
+            background-color: #383A40;
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+        #chat-message-input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            outline: none;
+        }
+        /* Scrollbar */
+        #chat-log::-webkit-scrollbar { width: 8px; }
+        #chat-log::-webkit-scrollbar-track { background: transparent; }
+        #chat-log::-webkit-scrollbar-thumb { background: #1e1f22; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="sidebar">
+        <h5 class="text-white mb-4">Kanały</h5>
+        <div class="text-secondary mb-2 fw-bold"># {{ room_name }}</div>
+        <a href="/" class="btn btn-sm btn-outline-secondary mt-auto">Powrót</a>
+    </div>
+
+    <div class="chat-main">
+        <div class="chat-header">
+            # {{ room_name }}
+        </div>
+        
+        <div id="chat-log">
+            <div class="message-box">
+                <span class="author">System</span>
+                <span class="timestamp">Dzisiaj o 14:00</span>
+                <span class="content">Połączono z kanałem #{{ room_name }}. Napisz coś!</span>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="message-input-container">
+                <input id="chat-message-input" type="text" placeholder="Napisz na #{{ room_name }}" autocomplete="off">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const roomName = "{{ room_name }}";
+    // Automatyczne wykrywanie protokołu (ws:// lub wss:// na Renderze)
+    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const chatSocket = new WebSocket(
+        wsScheme + '://' + window.location.host + '/ws/chat/' + roomName + '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const log = document.querySelector('#chat-log');
+        
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message-box';
+        
+        const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        msgDiv.innerHTML = `
+            <span class="author">${data.user}</span>
+            <span class="timestamp">Dziś o ${now}</span>
+            <span class="content">${data.message}</span>
+        `;
+        
+        log.appendChild(msgDiv);
+        log.scrollTop = log.scrollHeight;
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            if(message.trim() !== "") {
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                messageInputDom.value = '';
+            }
+        }
+    };
+</script>
+
+</body>
+</html></title>
+</head>
+<body>
+
+</body>
+</html>
