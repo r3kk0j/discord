@@ -16,7 +16,7 @@ class Profile(models.Model):
     is_blocked = models.BooleanField(default=False)
 
     class Meta:
-        app_label = 'chat'  # Kluczowa poprawka
+        app_label = 'chat'
 
     def __str__(self):
         return f"{self.user.username} ({self.role})"
@@ -31,7 +31,7 @@ class Channel(models.Model):
     description = models.TextField(blank=True)
 
     class Meta:
-        app_label = 'chat'  # Kluczowa poprawka
+        app_label = 'chat'
 
     def __str__(self):
         return self.name
@@ -45,5 +45,5 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        app_label = 'chat'  # Kluczowa poprawka
+        app_label = 'chat'
         ordering = ['timestamp']

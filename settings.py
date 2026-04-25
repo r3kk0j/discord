@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'models.ChatConfig',  # Wskazujemy na konfigurację wewnątrz pliku models.py
+    'apps.ChatConfig',  # Zmieniono z models.ChatConfig na apps.ChatConfig
 ]
 
 MIDDLEWARE = [

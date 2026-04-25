@@ -2,7 +2,7 @@
 set -o errexit
 
 pip install -r requirements.txt
-pip install Pillow # Wymagane do obrazków
+pip install Pillow
 
 python manage.py collectstatic --no-input
 python manage.py makemigrations chat
