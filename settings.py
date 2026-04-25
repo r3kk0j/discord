@@ -1,10 +1,10 @@
 import os
-import dj_database_url
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-key-123')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-key')
 DEBUG = 'RENDER' not in os.environ
 ALLOWED_HOSTS = ['*']
 
@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'chat',
+    'models.ChatConfig',  # Wskazujemy na konfigurację wewnątrz pliku models.py
 ]
 
 MIDDLEWARE = [
@@ -52,7 +52,6 @@ DATABASES = {
     'default': dj_database_url.config(default='sqlite:///db.sqlite3', conn_max_age=600)
 }
 
-# Konfiguracja warstwy kanałów z Redisem na Renderze
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -65,6 +64,8 @@ CHANNEL_LAYERS = {
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

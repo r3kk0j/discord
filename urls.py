@@ -12,6 +12,9 @@ urlpatterns = [
     path('register/', views.register_view, name='register'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('chat/<str:room_name>/', views.chat_room, name='chat_room'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'views.custom_404'

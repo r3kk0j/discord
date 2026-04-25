@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-import models  # Import bez kropki
+import models
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -15,6 +16,7 @@ def register_view(request):
         form = UserCreationForm()
     return render(request, 'index.html', {'form': form, 'type': 'register'})
 
+
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
@@ -26,6 +28,7 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'index.html', {'form': form, 'type': 'login'})
 
+
 @login_required
 def index(request):
     channels = models.Channel.objects.all()
@@ -33,9 +36,14 @@ def index(request):
         models.Channel.objects.create(name="ogolny")
     return render(request, 'index.html', {'channels': channels, 'type': 'home'})
 
+
 @login_required
 def chat_room(request, room_name):
-    channel = models.Channel.objects.get(name=room_name)
+    try:
+        channel = models.Channel.objects.get(name=room_name)
+    except models.Channel.DoesNotExist:
+        channel = models.Channel.objects.create(name=room_name)
+
     chat_messages = models.Message.objects.filter(channel=channel)
     channels = models.Channel.objects.all()
     return render(request, 'chat.html', {
@@ -43,6 +51,7 @@ def chat_room(request, room_name):
         'chat_messages': chat_messages,
         'channels': channels
     })
+
 
 def custom_404(request, exception):
     return render(request, 'index.html', {'type': '404'}, status=404)
