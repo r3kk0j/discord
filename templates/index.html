@@ -2,47 +2,29 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Czat Projekt</title>
+    <title>Czat</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #36393f; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: #2f3136; padding: 40px; border-radius: 10px; width: 350px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-        h2 { margin-bottom: 25px; }
-        form p { text-align: left; margin-bottom: 15px; }
-        input { width: 100%; padding: 12px; background: #202225; border: none; color: white; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #5865f2; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 20px; }
-        button:hover { background: #4752c4; }
-        a { color: #00aff4; text-decoration: none; font-size: 14px; }
-        ul { list-style: none; padding: 0; }
-        li { background: #4f545c; margin: 10px 0; padding: 12px; border-radius: 5px; }
-        li a { color: white; display: block; font-weight: bold; }
+        body { font-family: sans-serif; background: #36393f; color: white; text-align: center; padding-top: 50px; }
+        .card { background: #2f3136; padding: 20px; display: inline-block; border-radius: 8px; width: 300px; }
+        input { width: 90%; padding: 10px; margin: 10px 0; }
+        button { width: 100%; padding: 10px; background: #5865f2; color: white; border: none; cursor: pointer; }
+        a { color: #00aff4; text-decoration: none; }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="card">
         {% if type == 'login' %}
-            <h2>Witaj ponownie!</h2>
-            <form method="post">
-                {% csrf_token %} {{ form.as_p }}
-                <button type="submit">Zaloguj</button>
-            </form>
-            <p style="margin-top: 15px;">Nie masz konta? <a href="{% url 'register' %}">Zarejestruj się</a></p>
-
+            <h2>Login</h2>
+            <form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Zaloguj</button></form>
+            <p><a href="{% url 'register' %}">Rejestracja</a></p>
         {% elif type == 'register' %}
-            <h2>Załóż konto</h2>
-            <form method="post">
-                {% csrf_token %} {{ form.as_p }}
-                <button type="submit">Zarejestruj</button>
-            </form>
-            <p style="margin-top: 15px;"><a href="{% url 'login' %}">Masz już konto?</a></p>
-
+            <h2>Rejestracja</h2>
+            <form method="post">{% csrf_token %}{{ form.as_p }}<button type="submit">Zarejestruj</button></form>
+            <p><a href="{% url 'login' %}">Masz konto?</a></p>
         {% else %}
-            <h2>Wybierz kanał</h2>
-            <ul>
-                {% for channel in channels %}
-                    <li><a href="{% url 'chat_room' channel.name %}"># {{ channel.name }}</a></li>
-                {% endfor %}
-            </ul>
-            <a href="{% url 'logout' %}" style="color: #ed4245; display: block; margin-top: 20px;">Wyloguj</a>
+            <h2>Witaj {{ user.username }}</h2>
+            {% for c in channels %}<p><a href="{% url 'chat_room' c.name %}"># {{ c.name }}</a></p>{% endfor %}
+            <a href="{% url 'logout' %}" style="color:red">Wyloguj</a>
         {% endif %}
     </div>
 </body>

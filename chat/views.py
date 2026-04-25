@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .models import Channel, Message
+from .models import Channel
 
 def register_view(request):
     if request.method == 'POST':
@@ -30,16 +30,9 @@ def login_view(request):
 def index(request):
     channels = Channel.objects.all()
     if not channels.exists():
-        Channel.objects.get_or_create(name="ogolny")
+        Channel.objects.create(name="ogolny")
     return render(request, 'index.html', {'channels': channels, 'type': 'home'})
 
 @login_required
 def chat_room(request, room_name):
-    channel, _ = Channel.objects.get_or_create(name=room_name)
-    chat_messages = Message.objects.filter(channel=channel)
-    channels = Channel.objects.all()
-    return render(request, 'chat.html', {
-        'room_name': room_name,
-        'chat_messages': chat_messages,
-        'channels': channels
-    })
+    return render(request, 'chat.html', {'room_name': room_name})
