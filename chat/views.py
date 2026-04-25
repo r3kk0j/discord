@@ -28,6 +28,7 @@ def login_view(request):
 
 @login_required
 def index(request):
+    # Proste pobranie kanałów, jeśli baza pusta - stwórz jeden
     channels = Channel.objects.all()
     if not channels.exists():
         Channel.objects.create(name="ogolny")
