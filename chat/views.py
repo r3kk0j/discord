@@ -35,7 +35,7 @@ def index(request):
 
 @login_required
 def chat_room(request, room_name):
-    channel, created = Channel.objects.get_or_create(name=room_name)
+    channel, _ = Channel.objects.get_or_create(name=room_name)
     chat_messages = Message.objects.filter(channel=channel)
     channels = Channel.objects.all()
     return render(request, 'chat.html', {

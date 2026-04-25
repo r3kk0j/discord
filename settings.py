@@ -4,8 +4,9 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'twoj-klucz-bezpieczenstwa')
-DEBUG = 'RENDER' not in os.environ
+# Klucz na sztywno - najprościej do projektu na studia
+SECRET_KEY = 'django-insecure-studia-projekt-klucz-123'
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -17,7 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'chat', # Twoja nowa aplikacja
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +51,6 @@ TEMPLATES = [
     },
 ]
 
-# Baza danych (Postgres na Renderze lub SQLite lokalnie)
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
@@ -58,21 +58,21 @@ DATABASES = {
     )
 }
 
-# Redis dla Channels - Użyj Internal Key Value URL z obrazka
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://red-d7mb59qqqhas73f924d0:6379')],
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         },
     },
 }
 
+# Przekierowania logowania
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
