@@ -4,10 +4,12 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent
 
-# Klucz na sztywno - najprościej do projektu na studia
 SECRET_KEY = 'django-insecure-studia-projekt-klucz-123'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
+
+# TO NAPRAWIA BŁĄD 403 NA RENDERZE
+CSRF_TRUSTED_ORIGINS = ['https://discord-0h31.onrender.com']
 
 INSTALLED_APPS = [
     'daphne',
@@ -32,13 +34,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'urls'
-WSGI_APPLICATION = 'wsgi.application'
-ASGI_APPLICATION = 'asgi.application'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'], # Twoja ścieżka do folderu z htmlami
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -52,10 +52,7 @@ TEMPLATES = [
 ]
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
-    )
+    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
 }
 
 CHANNEL_LAYERS = {
@@ -67,7 +64,9 @@ CHANNEL_LAYERS = {
     },
 }
 
-# Przekierowania logowania
+WSGI_APPLICATION = 'wsgi.application'
+ASGI_APPLICATION = 'asgi.application'
+
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 

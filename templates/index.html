@@ -2,20 +2,19 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Discord Clone</title>
+    <title>Czat Projekt</title>
     <style>
-        body { font-family: sans-serif; background: #36393f; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: #2f3136; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); width: 100%; max-width: 350px; }
-        h2 { text-align: center; margin-bottom: 20px; }
-        form p { display: flex; flex-direction: column; margin-bottom: 15px; }
-        input { padding: 10px; background: #202225; border: 1px solid #202225; color: white; border-radius: 3px; }
-        button { width: 100%; padding: 12px; background: #5865f2; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #36393f; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: #2f3136; padding: 40px; border-radius: 10px; width: 350px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        h2 { margin-bottom: 25px; }
+        form p { text-align: left; margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; background: #202225; border: none; color: white; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #5865f2; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 20px; }
         button:hover { background: #4752c4; }
-        .footer-link { text-align: center; margin-top: 15px; font-size: 0.9em; }
-        a { color: #00aff4; text-decoration: none; }
-        .channel-list { list-style: none; padding: 0; }
-        .channel-list li { margin: 10px 0; background: #4f545c; padding: 10px; border-radius: 5px; }
-        .channel-list a { color: white; display: block; }
+        a { color: #00aff4; text-decoration: none; font-size: 14px; }
+        ul { list-style: none; padding: 0; }
+        li { background: #4f545c; margin: 10px 0; padding: 12px; border-radius: 5px; }
+        li a { color: white; display: block; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -23,35 +22,27 @@
         {% if type == 'login' %}
             <h2>Witaj ponownie!</h2>
             <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Zaloguj się</button>
+                {% csrf_token %} {{ form.as_p }}
+                <button type="submit">Zaloguj</button>
             </form>
-            <div class="footer-link">
-                Potrzebujesz konta? <a href="{% url 'register' %}">Zarejestruj się</a>
-            </div>
+            <p style="margin-top: 15px;">Nie masz konta? <a href="{% url 'register' %}">Zarejestruj się</a></p>
 
         {% elif type == 'register' %}
-            <h2>Stwórz konto</h2>
+            <h2>Załóż konto</h2>
             <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Kontynuuj</button>
+                {% csrf_token %} {{ form.as_p }}
+                <button type="submit">Zarejestruj</button>
             </form>
-            <div class="footer-link">
-                <a href="{% url 'login' %}">Masz już konto?</a>
-            </div>
+            <p style="margin-top: 15px;"><a href="{% url 'login' %}">Masz już konto?</a></p>
 
         {% else %}
-            <h2>Serwery</h2>
-            <ul class="channel-list">
+            <h2>Wybierz kanał</h2>
+            <ul>
                 {% for channel in channels %}
                     <li><a href="{% url 'chat_room' channel.name %}"># {{ channel.name }}</a></li>
                 {% endfor %}
             </ul>
-            <div class="footer-link">
-                <a href="{% url 'logout' %}" style="color: #ed4245;">Wyloguj się</a>
-            </div>
+            <a href="{% url 'logout' %}" style="color: #ed4245; display: block; margin-top: 20px;">Wyloguj</a>
         {% endif %}
     </div>
 </body>
