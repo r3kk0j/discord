@@ -29,14 +29,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
-# W płaskiej strukturze szukamy plików w folderze głównym
 ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'wsgi.application'
 ASGI_APPLICATION = 'asgi.application'
 
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [os.path.join(BASE_DIR, 'templates')], # Stwórz folder templates
+    'DIRS': [os.path.join(BASE_DIR, 'templates')],
     'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
@@ -52,6 +51,7 @@ DATABASES = {
     'default': dj_database_url.config(default='sqlite:///db.sqlite3', conn_max_age=600)
 }
 
+# Konfiguracja warstwy kanałów z Redisem na Renderze
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
