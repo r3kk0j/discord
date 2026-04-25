@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .models import Channel
@@ -26,44 +26,20 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'index.html', {'form': form, 'type': 'login'})
 
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
 @login_required
 def index(request):
-    # Proste pobranie kanałów, jeśli baza pusta - stwórz jeden
+    # Tworzy kanał w RAM jeśli go nie ma
+    Channel.objects.get_or_create(name="ogolny")
     channels = Channel.objects.all()
-    if not channels.exists():
-        Channel.objects.create(name="ogolny")
-    return render(request, 'index.html', {'channels': channels, 'type': 'home'})
+    return render(request, 'index.html', {
+        'channels': channels,
+        'type': 'home'
+    })
 
 @login_required
 def chat_room(request, room_name):
     return render(request, 'chat.html', {'room_name': room_name})
-
-
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
-from .models import Channel, DatabaseTest
-
-
-@login_required
-def index(request):
-    # TEST BAZY: Spróbuj stworzyć wpis
-    db_status = "Oczekiwanie..."
-    try:
-        DatabaseTest.objects.create(status="Baza działa i zapisuje!")
-        db_status = "SUKCES: Baza danych się uaktualniła!"
-    except Exception as e:
-        db_status = f"BŁĄD: Tabela nie istnieje lub brak uprawnień: {str(e)}"
-
-    channels = Channel.objects.all()
-    if not channels.exists():
-        Channel.objects.create(name="ogolny")
-
-    return render(request, 'index.html', {
-        'channels': channels,
-        'type': 'home',
-        'db_test': db_status
-    })
-
-# Pozostałe widoki (register_view, login_view) zostaw bez zmian (tylko usuń odwołania do Profile)

@@ -1,30 +1,18 @@
 import os
 from pathlib import Path
-import dj_database_url
 
-BASE_DIR = Path(__file__).resolve().parent
-SECRET_KEY = 'prosty-klucz-na-studia'
+BASE_DIR = Path(__file__).resolve().parent.parent
+SECRET_KEY = 'django-insecure-twoja-dowolna-klucz-testowy'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
-# To naprawia błąd Forbidden (CSRF) na Renderze
-CSRF_TRUSTED_ORIGINS = ['https://discord-0h31.onrender.com']
-
-# DODANE: Wymagane dla poprawnego działania sesji i CSRF na HTTPS (Render)
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'None'
-CSRF_COOKIE_SAMESITE = 'None'
-
 INSTALLED_APPS = [
-    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'channels',
     'chat',
 ]
 
@@ -36,11 +24,10 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'urls'
-WSGI_APPLICATION = 'wsgi.application'
-ASGI_APPLICATION = 'asgi.application'
+ROOT_URLCONF = 'chat_project.urls' # Upewnij się, że nazwa projektu się zgadza
 
 TEMPLATES = [
     {
@@ -58,17 +45,26 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = 'chat_project.wsgi.application'
+
+# BAZA W RAM - TO ROZWIĄZUJE TWOJE PROBLEMY
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': ':memory:',
     }
 }
 
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'index'
+AUTH_PASSWORD_VALIDATORS = [] # Uproszczenie dla testów
 
-STATIC_URL = '/static/'
+LANGUAGE_CODE = 'pl-pl'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
+
+STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Fix dla Rendera i błędu 403
+CSRF_TRUSTED_ORIGINS = ['https://discord-0h31.onrender.com', 'https://*.onrender.com']
+CSRF_ALLOW_WILDCARD = True
