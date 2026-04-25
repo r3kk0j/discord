@@ -2,7 +2,8 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
-from .models import Message, Channel
+# Usunięto kropkę przed models
+from models import Message, Channel
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -23,7 +24,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.channel_layer.group_send(
             self.room_group_name,
-            {'type': 'chat_message', 'message': message, 'sender': user.username}
+            {
+                'type': 'chat_message',
+                'message': message,
+                'sender': user.username
+            }
         )
 
     async def chat_message(self, event):
