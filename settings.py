@@ -3,12 +3,11 @@ from pathlib import Path
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent
-
 SECRET_KEY = 'django-insecure-studia-projekt-klucz-123'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
-# TO NAPRAWIA BŁĄD 403 NA RENDERZE
+# Bez tego formularze na Renderze nie zadziałają
 CSRF_TRUSTED_ORIGINS = ['https://discord-0h31.onrender.com']
 
 INSTALLED_APPS = [
@@ -34,11 +33,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'urls'
+WSGI_APPLICATION = 'wsgi.application'
+ASGI_APPLICATION = 'asgi.application'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # Twoja ścieżka do folderu z htmlami
+        'DIRS': [BASE_DIR / 'templates'], # Ważne, żeby widział Twoje pliki HTML
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -52,7 +53,10 @@ TEMPLATES = [
 ]
 
 DATABASES = {
-    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 CHANNEL_LAYERS = {
@@ -64,14 +68,9 @@ CHANNEL_LAYERS = {
     },
 }
 
-WSGI_APPLICATION = 'wsgi.application'
-ASGI_APPLICATION = 'asgi.application'
-
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
