@@ -10,6 +10,12 @@ ALLOWED_HOSTS = ['*']
 # To naprawia błąd Forbidden (CSRF) na Renderze
 CSRF_TRUSTED_ORIGINS = ['https://discord-0h31.onrender.com']
 
+# DODANE: Wymagane dla poprawnego działania sesji i CSRF na HTTPS (Render)
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'None'
+
 INSTALLED_APPS = [
     'daphne',
     'django.contrib.admin',
@@ -52,15 +58,14 @@ TEMPLATES = [
     },
 ]
 
-# Baza w pamięci lub pliku - zniknie przy deployu, ale nas to nie obchodzi
 DATABASES = {
     'default': dj_database_url.config(default='sqlite:///db.sqlite3')
 }
 
-# Naprawia błąd 404 /accounts/login/
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
