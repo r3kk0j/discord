@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
-import models
+from .models import Channel, Message
 
 def register_view(request):
     if request.method == 'POST':
@@ -28,22 +28,18 @@ def login_view(request):
 
 @login_required
 def index(request):
-    channels = models.Channel.objects.all()
+    channels = Channel.objects.all()
     if not channels.exists():
-        models.Channel.objects.create(name="ogolny")
+        Channel.objects.get_or_create(name="ogolny")
     return render(request, 'index.html', {'channels': channels, 'type': 'home'})
 
 @login_required
 def chat_room(request, room_name):
-    # Pobierz lub stwórz kanał jeśli nie istnieje
-    channel, created = models.Channel.objects.get_or_create(name=room_name)
-    chat_messages = models.Message.objects.filter(channel=channel)
-    channels = models.Channel.objects.all()
+    channel, created = Channel.objects.get_or_create(name=room_name)
+    chat_messages = Message.objects.filter(channel=channel)
+    channels = Channel.objects.all()
     return render(request, 'chat.html', {
         'room_name': room_name,
         'chat_messages': chat_messages,
         'channels': channels
     })
-
-def custom_404(request, exception):
-    return render(request, 'index.html', {'type': '404'}, status=404)

@@ -15,23 +15,17 @@ class Profile(models.Model):
     bio = models.TextField(max_length=500, blank=True)
     is_blocked = models.BooleanField(default=False)
 
-    class Meta:
-        app_label = 'chat'
-
     def __str__(self):
         return f"{self.user.username} ({self.role})"
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        Profile.objects.get_or_create(user=instance)
 
 class Channel(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
-
-    class Meta:
-        app_label = 'chat'
 
     def __str__(self):
         return self.name
@@ -45,5 +39,4 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        app_label = 'chat'
         ordering = ['timestamp']
