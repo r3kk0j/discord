@@ -11,6 +11,7 @@ class Channel(models.Model):
         return self.name
 
 class Message(models.Model):
+    # Naprawione: było on_on_delete, ma być on_delete
     channel = models.ForeignKey(Channel, related_name='messages', on_delete=models.CASCADE)
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     content = models.TextField()
